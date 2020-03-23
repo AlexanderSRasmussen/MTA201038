@@ -24,7 +24,8 @@ public class DistanceMeasure : MonoBehaviour
 
     public void DistanceCalculator(GameObject object1, GameObject object2)
     {
-        float distance = Vector3.Distance(object1.transform.position, object2.transform.position);
-        currentDistance = distance;
+        //float distance = Vector3.Distance(object1.transform.position, object2.transform.position);
+        //currentDistance = distance;
+        currentDistance = Vector3.Distance(object1.transform.position, object2.transform.position);
     }
 }
