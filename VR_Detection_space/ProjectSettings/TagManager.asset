@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Obstacle
+  - Floating
+  - Person
+  - Cane
   layers:
   - Default
   - TransparentFX

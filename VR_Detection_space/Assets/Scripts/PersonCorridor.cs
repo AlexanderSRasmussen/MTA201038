@@ -5,7 +5,7 @@ using UnityEngine;
 public class PersonCorridor : MonoBehaviour
 {
 
-    public bool collide = false;
+    public bool pCollide, cCollide;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,18 +15,48 @@ public class PersonCorridor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //OnCollisionEnter();
+        if (pCollide && cCollide == true)
+        {
+            Debug.Log("It wörks");
+        }
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        switch (other.tag)
+        if (other.CompareTag("Person"))
         {
-            case "Obstacle":
-                Debug.Log("Do something else here");
-                collide = true;
-                break;
+            pCollide = true;
         }
 
+        if (other.CompareTag("Cane"))
+        {
+            cCollide = true;
+        }
     }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Person"))
+        {
+            pCollide = false;
+        }
+
+        if (other.CompareTag("Cane"))
+        {
+            cCollide = false;
+        }
+    }
+
+        //switch (other.tag)
+        //{
+        //    case "Person":
+        //        ///Debug.Log("Do something else here");
+        //        pCollide = true;
+        //        break;
+
+        //    case "Cane":
+        //        //Debug.Log("Floating object hit");
+        //        cCollide = true;
+        //        break;
+        //}
 }
