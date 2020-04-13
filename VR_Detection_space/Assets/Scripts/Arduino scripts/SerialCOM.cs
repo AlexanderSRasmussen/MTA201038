@@ -87,7 +87,6 @@ public class SerialCOM : MonoBehaviour
     public void NullRegistered()
     {
         sp.Write("0");
-
     }
 
 }

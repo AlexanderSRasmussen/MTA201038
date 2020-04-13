@@ -6,6 +6,7 @@ public class PersonCorridor : MonoBehaviour
 {
 
     public bool pCollide, cCollide;
+    string hit;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,9 +18,27 @@ public class PersonCorridor : MonoBehaviour
     {
         if (pCollide && cCollide == true)
         {
-            Debug.Log("It wörks");
+            //Debug.Log("It wörks");
+            //Sending.HitRegistered();
+            hit = "1";
+        } else {
+
+            hit = "0";
+            //Sending.NullRegistered();
+        } 
+
+        switch (hit)
+        {
+            case "1":
+                Sending.HitRegistered();
+                break;
+
+            case "0":
+                break;
         }
     }
+
+    
 
     void OnTriggerEnter(Collider other)
     {
