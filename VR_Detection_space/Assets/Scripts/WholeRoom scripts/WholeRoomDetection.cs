@@ -7,8 +7,11 @@ public class WholeRoomDetection : MonoBehaviour
 {
     public bool cCollide = false;
     string hit;
-    public Button OnButton;
-    public Button OffButton;
+    public Button OnButton, OffButton;
+    public GameObject cane, object1, objHit;
+    public float currentDistance;
+    //public string objColW;
+
 
 
     // Start is called before the first frame update
@@ -20,19 +23,19 @@ public class WholeRoomDetection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Signal();
-
+        
         if (cCollide == true)
         {
-            //Debug.Log("It wörks");
+            DistanceCalculator(object1, cane);
             //hit = "1";
             //Sending.HitRegistered();
             OnButton.onClick.Invoke();
-            //Signal();
+            //CSVWrite.objectHit = cCollide;
         }
         else if (cCollide == false)
         {
             OffButton.onClick.Invoke();
+            //CSVWrite.objectHit = cCollide;
             //hit = "0";
             //Sending.NullRegistered();
         }
@@ -52,25 +55,29 @@ public class WholeRoomDetection : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
 
-        if (other.CompareTag("Cane"))
+        if (other.CompareTag("Obstacle"))
         {
             cCollide = true;
+            //objColW = other.gameObject.name;
+            objHit = GameObject.Find(other.gameObject.name);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
 
-        if (other.CompareTag("Cane"))
+        if (other.CompareTag("Obstacle"))
         {
             cCollide = false;
+            //objColW = null;
+            objHit = null;
         }
     }
 
-    IEnumerator Signal()
+    public float DistanceCalculator(GameObject cane, GameObject object1)
     {
-        Sending.HitRegistered();
-        yield return new WaitForSeconds(2);
+        currentDistance = Vector3.Distance(cane.transform.position, object1.transform.position);
+        return currentDistance;
     }
 
 }

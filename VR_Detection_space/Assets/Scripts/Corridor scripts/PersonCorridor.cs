@@ -7,6 +7,7 @@ public class PersonCorridor : MonoBehaviour
 
     public bool pCollide, cCollide;
     string hit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +17,8 @@ public class PersonCorridor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (pCollide && cCollide == true)
         {
             //Debug.Log("It wörks");
@@ -30,15 +33,13 @@ public class PersonCorridor : MonoBehaviour
         switch (hit)
         {
             case "1":
-                Sending.HitRegistered();
+                Sending.HitRegistered();  //SHOULD BE ABLE TO MOVE THIS UP IN THE IF STATEMENT - is the switch case even neccesary????
                 break;
 
             case "0":
                 break;
         }
     }
-
-    
 
     void OnTriggerEnter(Collider other)
     {
@@ -66,16 +67,16 @@ public class PersonCorridor : MonoBehaviour
         }
     }
 
-        //switch (other.tag)
-        //{
-        //    case "Person":
-        //        ///Debug.Log("Do something else here");
-        //        pCollide = true;
-        //        break;
+    //switch (other.tag)
+    //{
+    //    case "Person":
+    //        ///Debug.Log("Do something else here");
+    //        pCollide = true;
+    //        break;
 
-        //    case "Cane":
-        //        //Debug.Log("Floating object hit");
-        //        cCollide = true;
-        //        break;
-        //}
+    //    case "Cane":
+    //        //Debug.Log("Floating object hit");
+    //        cCollide = true;
+    //        break;
+    //}
 }
