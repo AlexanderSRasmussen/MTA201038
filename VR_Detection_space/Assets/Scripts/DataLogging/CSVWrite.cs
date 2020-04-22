@@ -70,7 +70,7 @@ public class CSVWrite : MonoBehaviour
             rowDataTemp[7] = pX.ToString();                   //Person pos X               %DONE
             rowDataTemp[8] = pY.ToString();                   //Person pos Y               %DONE
             rowDataTemp[9] = pO.ToString();                   //Person orientation         %DONE
-            rowDataTemp[10] = objectHit.ToString();           //Object hit checker         %DONE
+            rowDataTemp[10] = objectHit.ToString();           //Object hit checker         
             rowDataTemp[11] = objX.ToString();                //Object pos X               %DONE
             rowDataTemp[12] = objY.ToString();                //Object pos Y               %DONE
             rowDataTemp[13] = distToObject.ToString("0.000"); //Distance to the object hit %DONE

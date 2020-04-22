@@ -4,79 +4,77 @@ using UnityEngine;
 
 public class PersonCorridor : MonoBehaviour
 {
-
-    public bool pCollide, cCollide;
+    #region Variables
+    public bool pCollide = false;
+    bool triggerCheck;
     string hit;
-
+    public GameObject cane, objHit, lastObjHit;
+    public float currentDistance, currentDistance2;
+    //public string objColW;
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-
-        if (pCollide && cCollide == true)
-        {
-            //Debug.Log("It wörks");
-            //Sending.HitRegistered();
-            hit = "1";
-        } else {
-
-            hit = "0";
-            //Sending.NullRegistered();
-        } 
-
-        switch (hit)
-        {
-            case "1":
-                Sending.HitRegistered();  //SHOULD BE ABLE TO MOVE THIS UP IN THE IF STATEMENT - is the switch case even neccesary????
-                break;
-
-            case "0":
-                break;
-        }
+        //DistanceCalculator(cane, objHit);
+        //DistanceCalculator2(cane, lastObjHit);
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Person"))
+        GameObject holder;
+        //Just check if a newly entered gameobjet is closer - if not, stay at the same objHit
+
+        if (other.CompareTag("Obstacle"))
         {
             pCollide = true;
-        }
+            objHit = other.gameObject;
 
-        if (other.CompareTag("Cane"))
-        {
-            cCollide = true;
+            //objHit = GameObject.Find(other.gameObject.name);
+            if (!triggerCheck)
+            {
+                lastObjHit = objHit;
+                triggerCheck = true;
+            }
+            //Make a if statement that checks the distcne between the last hit object and the newest hit object, 
+            //to see wich is closer - then proceed to log ther closest object.
+            if (currentDistance < currentDistance2)
+            {
+                holder = objHit;
+                objHit = lastObjHit;
+                lastObjHit = holder;
+            }
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Person"))
+        //triggerCheck = false;
+        if (other.gameObject == objHit)
         {
             pCollide = false;
-        }
-
-        if (other.CompareTag("Cane"))
-        {
-            cCollide = false;
+            //objColW = null;
+            objHit = null;
+            triggerCheck = false;
+            currentDistance = 0f;
+            currentDistance2 = 0f;
         }
     }
 
-    //switch (other.tag)
-    //{
-    //    case "Person":
-    //        ///Debug.Log("Do something else here");
-    //        pCollide = true;
-    //        break;
+    void DistanceCalculator(GameObject cane, GameObject objHit)
+    {
+        currentDistance = Vector3.Distance(cane.transform.position, objHit.transform.position);
+        //return currentDistance;
+    }
 
-    //    case "Cane":
-    //        //Debug.Log("Floating object hit");
-    //        cCollide = true;
-    //        break;
-    //}
+    void DistanceCalculator2(GameObject cane, GameObject lastObjHit)
+    {
+        currentDistance2 = Vector3.Distance(cane.transform.position, lastObjHit.transform.position);
+        //return currentDistance;
+    }
 }
