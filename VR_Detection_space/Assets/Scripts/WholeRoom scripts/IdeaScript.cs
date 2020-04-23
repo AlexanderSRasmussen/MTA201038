@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,12 +11,15 @@ public class IdeaScript : MonoBehaviour
 
     #region Variables
     public List<GameObject> nameList = new List<GameObject>();
-    public List<float> distances = new List<float>();
+    //public List<float> distances = new List<float>();
+
+    //public Dictionary<GameObject, float> objDetected = new Dictionary<GameObject, float>();
+
     public bool cCollide = false;
     bool triggerCheck;
     string hit;
     public Button OnButton, OffButton;
-    public GameObject cane, objHit, lastObjHit;
+    public GameObject cane, objHit, lastObjHit, closestObject;
     public float currentDistance, currentDistance2;
     //public string objColW;
     #endregion
@@ -26,14 +32,12 @@ public class IdeaScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        //DistanceCalculator(cane, objHit);
-        //DistanceCalculator2(cane, lastObjHit);
-        if (cCollide = true)
+        ObjToCaneDist();
+        if (cCollide == true)
         {
             //OnButton.onClick.Invoke();
         }
-        else if (cCollide = false)
+        else if (cCollide == false)
         {
             //OffButton.onClick.Invoke();
         }
@@ -41,53 +45,76 @@ public class IdeaScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-
+        
         //ObjToCaneDist(cane, lastObjHit);
         if (other.CompareTag("Obstacle"))
         {
+            //objHit = other.gameObject;
+            //currentDistance = Vector3.Distance(cane.transform.position, other.transform.position);
+            //objDetected.Add(objHit, currentDistance);
             nameList.Add(other.gameObject);
-            ObjToCaneDist(cane, lastObjHit);
+            //ObjToCaneDist(cane, lastObjHit);
             //currentDistance = Vector3.Distance(cane.transform.position, other.transform.position);
             //distances.Add(currentDistance);
+
             cCollide = true;
         }
     }
 
+
     void OnTriggerExit(Collider other)
     {
-        nameList.Remove(other.gameObject);
-        distances.Remove(currentDistance);
-        //triggerCheck = false;
-        if (other.gameObject == objHit)
+        if (other.CompareTag("Obstacle"))
         {
+            nameList.Remove(other.gameObject);
             cCollide = false;
-            objHit = null;
-            triggerCheck = false;
-            //currentDistance = 0f;
-            //currentDistance2 = 0f;
+            //if (objDetected.ContainsKey(other.gameObject)){
+            //objDetected.Remove(other.gameObject);
+            //}
+
         }
-    }
 
-    //void DistanceCalculator(GameObject cane, GameObject objHit)
-    //{
-    //    currentDistance = Vector3.Distance(cane.transform.position, objHit.transform.position);
-    //    //return currentDistance;
-    //}
-
-    //void DistanceCalculator2(GameObject cane, GameObject lastObjHit)
-    //{
-    //    currentDistance2 = Vector3.Distance(cane.transform.position, lastObjHit.transform.position);
-    //    //return currentDistance;
-    //}
-
-    public void ObjToCaneDist(GameObject cane, GameObject lastObjHit)
-    {
+        //objDetected.Remove(other.gameObject, currentDistance);
         
-        for (var i = 0; i < nameList.Count; i++)
-       {
-            lastObjHit = nameList[i];
-            currentDistance = Vector3.Distance(cane.transform.position, lastObjHit.transform.position);
-            distances.Add(currentDistance);
-       }
+        //distances.Remove(currentDistance);
+        //triggerCheck = false;
+        //if (other.gameObject == objHit)
+        //{
+        //    cCollide = false;
+        //    objHit = null;
+        //    triggerCheck = false;
+        //}
+
     }
+
+
+        public void ObjToCaneDist()
+        {
+        //for (var i = 0; i < nameList.Count; i++)
+        //{
+        //    lastObjHit = nameList[i];
+        //    currentDistance = Vector3.Distance(cane.transform.position, lastObjHit.transform.position);
+        //    distances[i] = currentDistance;
+        //    distances.Add(distances[i]);
+        //    //distances.Add(distances[i]);
+        //   //make a variable that gets set to the distance of given object and updates the varaibel, not adding to the list
+        //}
+        float lowest = float.MaxValue;
+            foreach (GameObject o in nameList)
+            {
+                float temp = Vector3.Distance(transform.position, o.transform.position);
+                if (temp < lowest)
+                {
+                currentDistance = temp;
+                lowest = temp;
+                closestObject = o;
+                }
+            }
+
+            if (nameList.Count == 0)
+            {
+            currentDistance = 0f;
+            closestObject = null;
+            }
+        }
 }
