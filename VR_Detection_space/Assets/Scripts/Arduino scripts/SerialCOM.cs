@@ -19,7 +19,7 @@ public class SerialCOM : MonoBehaviour
     //boolean variable for reading values
     bool isStreaming = false;
 
-    public GameObject btn;
+    public GameObject btn; //Does this do anything? lul
 
     #endregion
 

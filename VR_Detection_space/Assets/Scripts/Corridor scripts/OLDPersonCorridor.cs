@@ -1,12 +1,9 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IdeaScript : MonoBehaviour
+public class OLDPersonCorridor : MonoBehaviour
 {
 
     #region Variables
@@ -32,11 +29,11 @@ public class IdeaScript : MonoBehaviour
         //Debug.Log(objHit);
         if (cCollide == true)
         {
-            OnButton.onClick.Invoke();
+            //OnButton.onClick.Invoke();
         }
         else if (cCollide == false)
         {
-            OffButton.onClick.Invoke();
+            //OffButton.onClick.Invoke();
         }
     }
 
@@ -44,7 +41,6 @@ public class IdeaScript : MonoBehaviour
     {
         GameObject holder;
         //Just check if a newly entered gameobjet is closer - if not, stay at the same objHit
-
 
         if (other.CompareTag("Obstacle"))
         {
@@ -57,7 +53,8 @@ public class IdeaScript : MonoBehaviour
                 lastObjHit = objHit;
                 triggerCheck = true;
             }
-
+            //Make a if statement that checks the distcne between the last hit object and the newest hit object, 
+            //to see wich is closer - then proceed to log ther closest object.
             if (currentDistance < currentDistance2)
             {
                 holder = objHit;
@@ -73,6 +70,7 @@ public class IdeaScript : MonoBehaviour
         if (other.gameObject == objHit)
         {
             cCollide = false;
+            //objColW = null;
             objHit = null;
             triggerCheck = false;
             currentDistance = 0f;
@@ -92,13 +90,4 @@ public class IdeaScript : MonoBehaviour
         currentDistance2 = Vector3.Distance(cane.transform.position, lastObjHit.transform.position);
         //return currentDistance;
     }
-
-    //Old distancechecker
-    //for (var i = 0; i < nameList.Count; i++)
-    //{
-    //    lastObjHit = nameList[i];
-    //    currentDistance = Vector3.Distance(cane.transform.position, lastObjHit.transform.position);
-    //    distances[i] = currentDistance;
-    //    distances.Add(distances[i]);
-    //}
 }

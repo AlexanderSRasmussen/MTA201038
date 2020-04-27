@@ -60,17 +60,17 @@ public class CSVWrite : MonoBehaviour
         //{
         //-----Formatting Starts-----//
         rowDataTemp = new string[15];
-            rowDataTemp[0] = participantID.ToString();        // name                      %DONE
-            rowDataTemp[1] = testID.ToString();               // ID                        %DONE
-            rowDataTemp[2] = detectDist.ToString();           //Detection range in meters  %DONE
-            rowDataTemp[3] = fov;                             //FOV                        %DONE
-            rowDataTemp[4] = wcX.ToString();                  //Whitecane pos X            %DONE
-            rowDataTemp[5] = wcY.ToString();                  //Whitecane pos Y            %DONE
-            rowDataTemp[6] = wcO.ToString();                  //Whitecane orientation      %DONE
-            rowDataTemp[7] = pX.ToString();                   //Person pos X               %DONE
-            rowDataTemp[8] = pY.ToString();                   //Person pos Y               %DONE
-            rowDataTemp[9] = pO.ToString();                   //Person orientation         %DONE
-            rowDataTemp[10] = objectHit.ToString();           //Object hit checker         
+            rowDataTemp[0]  = participantID.ToString();       // name                      %DONE
+            rowDataTemp[1]  = testID.ToString();              // ID                        %DONE
+            rowDataTemp[2]  = detectDist.ToString();          //Detection range in meters  %DONE
+            rowDataTemp[3]  = fov;                            //FOV                        %DONE
+            rowDataTemp[4]  = wcX.ToString();                 //Whitecane pos X            %DONE
+            rowDataTemp[5]  = wcY.ToString();                 //Whitecane pos Y            %DONE
+            rowDataTemp[6]  = wcO.ToString();                 //Whitecane orientation      %DONE
+            rowDataTemp[7]  = pX.ToString();                  //Person pos X               %DONE
+            rowDataTemp[8]  = pY.ToString();                  //Person pos Y               %DONE
+            rowDataTemp[9]  = pO.ToString();                  //Person orientation         %DONE
+            rowDataTemp[10] = objectHit.ToString();           //Object hit checker         %DONE
             rowDataTemp[11] = objX.ToString();                //Object pos X               %DONE
             rowDataTemp[12] = objY.ToString();                //Object pos Y               %DONE
             rowDataTemp[13] = distToObject.ToString("0.000"); //Distance to the object hit %DONE
@@ -143,7 +143,7 @@ public class CSVWrite : MonoBehaviour
         objectHit = wholeRoomClass.cCollide;
         distToObject = wholeRoomClass.currentDistance;
 
-        obstHit = wholeRoomClass.objHit;
+        obstHit = wholeRoomClass.closestObject;
         obstHit.transform.position = new Vector3(obstHit.transform.position.x, obstHit.transform.position.y, obstHit.transform.position.z);
         objX = obstHit.transform.position.x;
         objY = obstHit.transform.position.z;

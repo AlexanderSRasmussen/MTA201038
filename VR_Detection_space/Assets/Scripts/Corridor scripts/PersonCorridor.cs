@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PersonCorridor : MonoBehaviour
 {
-    #region Variables
-    public bool pCollide = false;
+#region Variables
+    public List<GameObject> nameList = new List<GameObject>();
+    public bool cCollide = false;
     bool triggerCheck;
     string hit;
-    public GameObject cane, objHit, lastObjHit;
-    public float currentDistance, currentDistance2;
-    //public string objColW;
-    #endregion
+    public Button OnButton, OffButton;
+    public GameObject closestObject, closestPersonObject;
+    public float currentDistance;
+#endregion
     // Start is called before the first frame update
     void Start()
     {
@@ -21,60 +23,64 @@ public class PersonCorridor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //DistanceCalculator(cane, objHit);
-        //DistanceCalculator2(cane, lastObjHit);
+        
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        GameObject holder;
-        //Just check if a newly entered gameobjet is closer - if not, stay at the same objHit
-
         if (other.CompareTag("Obstacle"))
         {
-            pCollide = true;
-            objHit = other.gameObject;
-
-            //objHit = GameObject.Find(other.gameObject.name);
-            if (!triggerCheck)
-            {
-                lastObjHit = objHit;
-                triggerCheck = true;
-            }
-            //Make a if statement that checks the distcne between the last hit object and the newest hit object, 
-            //to see wich is closer - then proceed to log ther closest object.
-            if (currentDistance < currentDistance2)
-            {
-                holder = objHit;
-                objHit = lastObjHit;
-                lastObjHit = holder;
-            }
+            nameList.Add(other.gameObject);
+            cCollide = true;
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        //triggerCheck = false;
-        if (other.gameObject == objHit)
+        if (other.CompareTag("Obstacle"))
         {
-            pCollide = false;
-            //objColW = null;
-            objHit = null;
-            triggerCheck = false;
-            currentDistance = 0f;
-            currentDistance2 = 0f;
+            nameList.Remove(other.gameObject);
+            cCollide = false;
         }
     }
 
-    void DistanceCalculator(GameObject cane, GameObject objHit)
+    public void ObjToCaneDist()
     {
-        currentDistance = Vector3.Distance(cane.transform.position, objHit.transform.position);
-        //return currentDistance;
+        float lowest = float.MaxValue;
+        foreach (GameObject o in nameList)
+        {
+            float temp = Vector3.Distance(transform.position, o.transform.position);
+
+            if (temp < lowest)
+            {
+                currentDistance = temp;
+                lowest = temp;
+                closestPersonObject = o;
+            }
+        }
+
+        if (nameList.Count == 0)
+        {
+            currentDistance = 0f;
+            closestPersonObject = null;
+        }
     }
 
-    void DistanceCalculator2(GameObject cane, GameObject lastObjHit)
+    #region GetCaneCollision
+    void GetCaneCollision()
     {
-        currentDistance2 = Vector3.Distance(cane.transform.position, lastObjHit.transform.position);
-        //return currentDistance;
+        var caneCollisionClass = FindObjectOfType<CaneCorridor>();
+
+        if (caneCollisionClass.closestCaneObject == closestPersonObject)
+        {
+            closestObject = closestPersonObject;
+            OnButton.onClick.Invoke();
+        }
+        else
+        {
+            closestObject = null;
+            OffButton.onClick.Invoke();
+        }
     }
+    #endregion
 }
