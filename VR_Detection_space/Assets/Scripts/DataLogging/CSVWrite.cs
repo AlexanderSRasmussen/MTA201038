@@ -4,23 +4,28 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System;
+using System.Threading;
+using System.Diagnostics;
+using UnityEngine.UI;
 
 public class CSVWrite : MonoBehaviour
 {
     #region Variables
-
+    public bool logStarter = false;
     public GameObject cane, person, obstHit;
     private List<string[]> rowData = new List<string[]>();
-    public int participantID, testID;
-    float distToObject, wcX, wcY, wcO, pX, pY, pO, objX, objY;
-    public float detectDist;
+    //public int participantID, testID, scenario;
+    float distToObject, wcX, wcY, wcO, pX, pY, pO, objX, objY, pSpeed;
+    //public float detectDist;
     string time;
-    public string fov;
-    public bool objectHit;
-    string[] rowDataTemp = new string[15];
-
-
+    public string participantID, testID, fod, detectDist, scenario, objectDetected, objectCollide;
+    //public bool objectDetected, objectCollide;
+    public Stopwatch timer = new Stopwatch();
+    Vector3 obstHitPosition = new Vector3(0,0,0);
+    string[] rowDataTemp = new string[19];
+    
     #endregion
+
     // Use this for initialization
     void Start()
     {
@@ -30,26 +35,36 @@ public class CSVWrite : MonoBehaviour
         rowDataTemp[0]  = "Participant ID";
         rowDataTemp[1]  = "Test ID";
         rowDataTemp[2]  = "Detection range in meters";
-        rowDataTemp[3]  = "FOV";
-        rowDataTemp[4]  = "Whitecane pos X";
-        rowDataTemp[5]  = "Whitecane pos Y";
-        rowDataTemp[6]  = "Whitecane orientation";
-        rowDataTemp[7]  = "Person pos X";
-        rowDataTemp[8]  = "Person pos Y";
-        rowDataTemp[9]  = "Person orientation";
-        rowDataTemp[10] = "Object hit";
-        rowDataTemp[11] = "Object pos X";
-        rowDataTemp[12] = "Object pos Y";
-        rowDataTemp[13] = "Distance to object";
-        rowDataTemp[14] = "Time stamp";
+        rowDataTemp[3]  = "FOD";
+        rowDataTemp[4]  = "Scenario";
+        rowDataTemp[5]  = "Whitecane pos X";
+        rowDataTemp[6]  = "Whitecane pos Y";
+        rowDataTemp[7]  = "Whitecane orientation";
+        rowDataTemp[8]  = "Object detected";
+        rowDataTemp[9]  = "Distance to object";
+        rowDataTemp[10] = "Person pos X";
+        rowDataTemp[11] = "Person pos Y";
+        rowDataTemp[12] = "Person orientation";
+        rowDataTemp[13] = "Person Speed";
+        rowDataTemp[14] = "Object collision";
+        rowDataTemp[15] = "Object pos X";
+        rowDataTemp[16] = "Object pos Y";
+        
+        rowDataTemp[17] = "Time stamp";
+        rowDataTemp[18] = "Timer";
         rowData.Add(rowDataTemp);
+
+        timer.Start();
     }
 
     void Update()
     {
-        Save();
-        GetCoordinates();
-        GetObjectHit();
+        if (logStarter == true)
+        {
+            Save();
+            GetCoordinates();
+            GetObjectHit();
+        } 
     }
     
     void Save()
@@ -59,24 +74,29 @@ public class CSVWrite : MonoBehaviour
         //for (int i = 0; i < 100; i++)
         //{
         //-----Formatting Starts-----//
-        rowDataTemp = new string[15];
-            rowDataTemp[0]  = participantID.ToString();       // name                      %DONE
-            rowDataTemp[1]  = testID.ToString();              // ID                        %DONE
-            rowDataTemp[2]  = detectDist.ToString();          //Detection range in meters  %DONE
-            rowDataTemp[3]  = fov;                            //FOV                        %DONE
-            rowDataTemp[4]  = wcX.ToString();                 //Whitecane pos X            %DONE
-            rowDataTemp[5]  = wcY.ToString();                 //Whitecane pos Y            %DONE
-            rowDataTemp[6]  = wcO.ToString();                 //Whitecane orientation      %DONE
-            rowDataTemp[7]  = pX.ToString();                  //Person pos X               %DONE
-            rowDataTemp[8]  = pY.ToString();                  //Person pos Y               %DONE
-            rowDataTemp[9]  = pO.ToString();                  //Person orientation         %DONE
-            rowDataTemp[10] = objectHit.ToString();           //Object hit checker         %DONE
-            rowDataTemp[11] = objX.ToString();                //Object pos X               %DONE
-            rowDataTemp[12] = objY.ToString();                //Object pos Y               %DONE
-            rowDataTemp[13] = distToObject.ToString("0.000"); //Distance to the object hit %DONE
-            rowDataTemp[14] = time = GetTimeStamp();          //Time                       %DONE
+        rowDataTemp = new string[19];
+            rowDataTemp[0]  = participantID;                  //name                       %DONE
+            rowDataTemp[1]  = testID;                         //ID                         %DONE
+            rowDataTemp[2]  = detectDist;                     //Detection range in meters  %DONE
+            rowDataTemp[3]  = fod;                            //Field of Detection         %DONE
+            rowDataTemp[4]  = scenario;                       //Scenario                   %DONE
+            rowDataTemp[5]  = wcX.ToString();                 //Whitecane pos X            %DONE
+            rowDataTemp[6]  = wcY.ToString();                 //Whitecane pos Y            %DONE
+            rowDataTemp[7]  = wcO.ToString();                 //Whitecane orientation      %DONE
+            rowDataTemp[8]  = objectDetected.ToString();      //Object Detection checker   %DONE    
+            rowDataTemp[9]  = distToObject.ToString("0.000"); //Distance to the object hit %DONE                     
+            rowDataTemp[10] = pX.ToString();                  //Person pos X               %DONE
+            rowDataTemp[11] = pY.ToString();                  //Person pos Y               %DONE
+            rowDataTemp[12] = pO.ToString();                  //Person orientation         %DONE
+            rowDataTemp[13] = pSpeed.ToString();              //Person Speed               %Done
+            rowDataTemp[14] = objectCollide.ToString();       //Object Collision           %DONE
+            rowDataTemp[15] = objX.ToString();                //Object pos X               %DONE
+            rowDataTemp[16] = objY.ToString();                //Object pos Y               %DONE
+            
+            rowDataTemp[17] = time = GetTimeStamp();          //Time                       %DONE
+            rowDataTemp[18] = timer.Elapsed.ToString();       //Timer
 
-        rowData.Add(rowDataTemp);
+            rowData.Add(rowDataTemp);
        // }
 
         string[][] output = new string[rowData.Count][];
@@ -104,6 +124,10 @@ public class CSVWrite : MonoBehaviour
         outStream.Close();
     }
 
+    public void StartLogging()
+    {
+        logStarter = true;
+    }
 #region GetFunctions
     private string getPath()
     {
@@ -139,15 +163,29 @@ public class CSVWrite : MonoBehaviour
     void GetObjectHit()
     {
         var wholeRoomClass = FindObjectOfType<WholeRoomDetection>();
+        var personColliderClass = FindObjectOfType<PersonCollider>();
 
-        objectHit = wholeRoomClass.cCollide;
+        if (wholeRoomClass.closestObject == null)
+        {
+            objectDetected = "null";
+
+        } else
+        {
+            objectDetected = wholeRoomClass.closestObject.name;
+            obstHitPosition = wholeRoomClass.closestObject.transform.position;
+            objX = obstHitPosition.x;
+            objY = obstHitPosition.y;
+        }
+
         distToObject = wholeRoomClass.currentDistance;
 
-        obstHit = wholeRoomClass.closestObject;
-        obstHit.transform.position = new Vector3(obstHit.transform.position.x, obstHit.transform.position.y, obstHit.transform.position.z);
-        objX = obstHit.transform.position.x;
-        objY = obstHit.transform.position.z;
+        //obstHit = wholeRoomClass.closestObject;
 
+        //obstHit.transform.position = new Vector3(obstHit.transform.position.x, obstHit.transform.position.y, obstHit.transform.position.z);
+        //objX = obstHit.transform.position.x;
+        //objY = obstHit.transform.position.z;
+
+        objectCollide =  personColliderClass.collidedObject;
 
         //objX = new Vector3(objDetectedName.transform.position.x, objDetectedName.transform.position.y, objDetectedName.transform.position.z);
         //objX = wholeRoomClass.gameObject.transform.position.x;
@@ -156,6 +194,13 @@ public class CSVWrite : MonoBehaviour
 
         //distToObject = WholeRoomDetection.currentDistance;
         //Debug.Log(distToObject + " " + wholeRoomClass.gameObject.name);
+    }
+
+    void GetSpeed()
+    {
+        var Speed = FindObjectOfType<SpeedMeasurement>();
+
+        pSpeed = Speed.vel;
     }
 #endregion
 }

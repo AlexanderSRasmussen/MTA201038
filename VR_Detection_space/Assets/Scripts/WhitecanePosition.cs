@@ -9,7 +9,7 @@ public class WhitecanePosition : MonoBehaviour
     public GameObject controller;
     public GameObject whitecane;
     //private Vector3 offset = new Vector3 (0.0f, -0.082f, 0.25f);
-    private Quaternion rotate = Quaternion.Euler (-95,0,0);
+    private Quaternion rotate = Quaternion.Euler (0,0,0);
 
     // Start is called before the first frame update
     void Start()

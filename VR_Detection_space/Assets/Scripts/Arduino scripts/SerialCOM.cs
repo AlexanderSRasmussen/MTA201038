@@ -28,11 +28,7 @@ public class SerialCOM : MonoBehaviour
     void Start()
     {
         Open();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
         if (isStreaming)
         {
             string value = ReadSerialPort();
@@ -41,6 +37,12 @@ public class SerialCOM : MonoBehaviour
                 Debug.Log(value);
             }
         }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //If streaming was here before
     }
 
 
